@@ -55,6 +55,8 @@ You are expected to complete the following tasks:
 - [ ] Documentation
 - Write a lightweight documentation for your solution
 
+Finally check `playground.js` and play around with your new module!
+
 ## References
 
 **Here's some helpful resources:**
