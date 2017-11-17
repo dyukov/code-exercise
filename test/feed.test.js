@@ -27,14 +27,19 @@ describe('#feed', () => {
     //   prev: {<previous value>},
     //   next: {<new value>}
     // }
-      expect(change.type).to.equal('insert');
+      expect(change.type).to.equal('add');
       expect(change.next.value).to.equal('somevalue');
     // Will timeout if subscribe doesn't work properly
       done();
     });
 
     // Perform example insert
-    r.table('test').insert({value: 'somevalue'});
+    setTimeout(function() {
+      r.table('test').insert({value: 'somevalue'}).run();
+    }, 1000); 
+
+  //  causes 'race condition' with item added before
+   //  r.table('test').insert({value: 'somevalue'});
   });
 
   // TODO: Add test case for 'insert'
@@ -50,7 +55,7 @@ describe('#feed', () => {
   //
 
   after(async () => {
-    await r.tableDrop('test');
+//    await r.tableDrop('test');
     await r.getPoolMaster().drain();
     s.dispose();
   });
