@@ -5,10 +5,12 @@ describe('#feed', () => {
 
   let r;
   let s;
+  let tableTitle = "test_" + Date.now();
 
   before(async () => {
     r = await client();
-    await r.tableCreate('test');
+    await r.tableCreate(tableTitle);
+    console.log("created tabl: " + tableTitle);
   });
 
   // NOTE: Simple example
@@ -17,7 +19,7 @@ describe('#feed', () => {
     // Create an observable changefeed from query
     s = feed(
     // Pass in any database query
-      r.table('test').filter({value: 'somevalue'})
+      r.table(tableTitle).filter({value: 'somevalue'})
     )
     // Subscribe to changes
     .subscribe(change => {
@@ -35,7 +37,7 @@ describe('#feed', () => {
 
     // Perform example insert
     setTimeout(function() {
-      r.table('test').insert({value: 'somevalue'}).run();
+      r.table(tableTitle).insert({value: 'somevalue'}).run();
     }, 1000); 
 
   //  causes 'race condition' with item added before
@@ -55,7 +57,7 @@ describe('#feed', () => {
   //
 
   after(async () => {
-    await r.tableDrop('test');
+    await r.tableDrop(tableTitle);
     await r.getPoolMaster().drain();
     s.dispose();
   });

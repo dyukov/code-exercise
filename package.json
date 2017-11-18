@@ -29,7 +29,6 @@
   "devDependencies": {
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "uuid": "^3.1.0"
+    "mocha": "^4.0.1"
   }
 }
