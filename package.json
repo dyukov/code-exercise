@@ -23,11 +23,13 @@
   "homepage": "https://github.com/businessbutleroy/code-exercise#readme",
   "dependencies": {
     "rethinkdbdash": "^2.3.31",
+    "rx": "^4.1.0",
     "rx-node": "^1.0.2"
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "uuid": "^3.1.0"
   }
 }

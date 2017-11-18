@@ -24,11 +24,11 @@ describe('#feed', () => {
     // Example change object:
     // {
     //   type: 'update',
-    //   prev: {<previous value>},
-    //   next: {<new value>}
+    //   old_val: {<old_valious value>},
+    //   new_val: {<new value>}
     // }
       expect(change.type).to.equal('add');
-      expect(change.next.value).to.equal('somevalue');
+      expect(change.new_val.value).to.equal('somevalue');
     // Will timeout if subscribe doesn't work properly
       done();
     });
@@ -55,7 +55,7 @@ describe('#feed', () => {
   //
 
   after(async () => {
-//    await r.tableDrop('test');
+    await r.tableDrop('test');
     await r.getPoolMaster().drain();
     s.dispose();
   });

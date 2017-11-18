@@ -6,21 +6,21 @@ client().then(r => {
 
  feed(r.table('test'))
   .filter(change => change.type === 'add') //insert')
-  .map(change => change.next)
+  .map(change => change.new_val)
   .subscribe(item => {
     console.log('this item was inserted: ', item);
   });
 
  feed(r.table('test'))
   .filter(change => change.type === 'change') // 'update')
-  .map(change => [change.prev, change.next])
-  .subscribe(([prev, next]) => {
-    console.log('this item was updated: ', prev, 'with new value: ', next);
+  .map(change => [change.old_val, change.new_val])
+  .subscribe(([old_val, new_val]) => {
+    console.log('this item was updated: ', old_val, 'with new value: ', new_val);
   });
 
  feed(r.table('test'))
   .filter(change => change.type === 'initial')
-  .map(change => change.next)
+  .map(change => change.new_val)
   .subscribe(item => {
     console.log('this item was already in table: ', item);
   });

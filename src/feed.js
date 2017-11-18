@@ -21,7 +21,7 @@ const observable = Rx.Observable.fromEvent(eventEmitter, 'data')
 queryObject.changes({includeInitial: true, includeStates: true, includeTypes: true}).run().then(function(cursor){
   cursor.on("data", function(message) {
       if(message.type != 'state')
-      eventEmitter.emit('data', { type:message.type, id: message.id, value: message.value, prev: message.old_val, next: message.new_val })
+      eventEmitter.emit('data', message)
   }),
   cursor.on("error", function(message) {
      // TODO : Log error - do not emit up the stack
