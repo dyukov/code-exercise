@@ -43,5 +43,7 @@ describe('#client', () => {
   after(async () => {
     await r.dbDrop('ClientTestTablesDb')
     await r.getPoolMaster().drain()
+
+    
   });
 });

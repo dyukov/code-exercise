@@ -1,6 +1,6 @@
 const { expect, assert } = require('chai');
 const { client, feed } = require('../src/');
-const Rx = require('rx');
+const RxObservable = require('rx').Observable;
 
 describe('#feed', () => {
 
@@ -20,10 +20,10 @@ describe('#feed', () => {
   });
 
 
-  // Smple example
+  // Return Rx.Observable from changefeed
   it('should return Rx.Observable from changefeed query', (done) => {
     let observable = feed(r.table(tableTitle))
-    expect(observable instanceof Rx.Observable).to.equal(true)
+    expect(observable instanceof RxObservable).to.equal(true)
     done();
   });
 
@@ -52,8 +52,10 @@ describe('#feed', () => {
     }, 1000);
   });
 
+  // TODO: Fix this
+  // Unhandled rejection ReqlDriverError: None of the pools have an opened connection and failed to open a new one
   // Test case for 'update'
-  xit('should return correct observable for updating row ("CHANGE")', (done) => {
+  it('should return correct observable for updating row ("CHANGE")', (done) => {
    s = feed(r.table(tableTitle).filter({value: 'existing3'} ))
             .filter(change => change.type === 'change')
             .subscribe(change => {
@@ -98,8 +100,8 @@ describe('#feed', () => {
   });
 
   after(async () => {
-    s.dispose();
     await r.tableDrop(tableTitle);
     await r.getPoolMaster().drain();
+    s.dispose();  
   });
 });
