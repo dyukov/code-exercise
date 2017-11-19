@@ -1,6 +1,6 @@
 # Documentation
 
-This module provides a function which wraps Rethink DB changefeed to Rx.Observable
+This module provides a function which wraps Rethink DB changefeed query to Rx.Observable
 and a client to easily connect to Rethink DB
 
 Example usage:
