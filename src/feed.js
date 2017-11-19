@@ -18,7 +18,7 @@ module.exports = (queryObject) => {
     }),
     cursor.on('error', err => {
       console.log("Error:")
-      console.log(err)
+      console.log(err.msg)
     })
   });
 

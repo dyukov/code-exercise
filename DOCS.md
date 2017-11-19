@@ -26,4 +26,7 @@ var subscription = RxNode.fromReadLineStream(queryObject.changes({includeInitial
 possible solution : swap 'rethinkdbash' to 'rethinkdb'; 
 
 * more tests
+ for cases: https://www.rethinkdb.com/api/javascript/group/
+
+
 * possible unit tests without real db connection.
