@@ -32,32 +32,32 @@ Although promises are great they are not particularly well suited for event base
 
 You are expected to complete the following tasks:
 
-+ [x] Setup environment
-+ Fork this repository to your own GitHub profile
-+ Setup development environment with RethinkDB and Node >=8.0.0
+- [x] Setup environment
+- Fork this repository to your own GitHub profile
+- Setup development environment with RethinkDB and Node >=8.0.0
 - Use Docker to get up and running fast with RethinkDB
     * Could not use Docker unfortunately. Docker on Windows requires HyperV Feature to be enabled. 
        And enabling this feature ruins my existing VMWare based setup. However it was really easy to run RethinkDB on my host machine, so I skipped this step.
 
 
 
-+ [x] Module skeleton  
-+ Use the module skeleton provided as a starting point
-+ Adhere to the same coding style
+- [x] Module skeleton  
+- Use the module skeleton provided as a starting point
+- Adhere to the same coding style
 
 
-+ [x] Module implementation
-+ Use whatever NPM packages and resources you might need
+- [x] Module implementation
+- Use whatever NPM packages and resources you might need
     * changed 'rx-node' to 'rx' - since  RxNode.fromStream() did not seem to work.
-+ Use ES6 with Node >=8.0.0
+- Use ES6 with Node >=8.0.0
 
 
-+ [x] Unit tests
-+ Unit test your module using mocha and chai
+- [x] Unit tests
+- Unit test your module using mocha and chai
 
 
-+ [x] Documentation
-+ Write a lightweight documentation for your solution
+- [x] Documentation
+- Write a lightweight documentation for your solution
     * https://github.com/dyukov/code-exercise/blob/master/DOCS.md
 
 Finally check `playground.js` and play around with your new module!
