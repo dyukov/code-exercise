@@ -3,7 +3,6 @@ const { client, feed } = require('./src');
 // Let's do something cool with observable changefeeds!
 // Use your imagination
 client().then(r => {
-
  feed(r.table('test'))
   .filter(change => change.type === 'add') //insert')
   .map(change => change.new_val)
@@ -18,17 +17,7 @@ client().then(r => {
     console.log('this item was updated: ', old_val, 'with new value: ', new_val);
   });
 
- feed(r.table('test'))
-  .filter(change => change.type === 'initial')
-  .map(change => change.new_val)
-  .subscribe(item => {
-    console.log('this item was already in table: ', item);
-  });
-
-
- 
-
-  setInterval(() => {
+ setInterval(() => {
     r.table('test').insert({value: 'foo'}).run();
   }, 2000);
 

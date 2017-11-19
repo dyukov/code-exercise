@@ -18,12 +18,14 @@ const observable = Rx.Observable.fromEvent(eventEmitter, 'data')
 // type: 'add'
 // type: 'change'
 
-queryObject.changes({includeInitial: true, includeStates: true, includeTypes: true}).run().then(function(cursor){
-  cursor.on("data", function(message) {
-      if(message.type != 'state')
-      eventEmitter.emit('data', message)
+// queryObject.changes({includeInitial: true, includeTypes: true}).run().then(function(cursor){
+queryObject.changes({includeInitial: true, includeTypes: true}).run().then(function(cursor){  
+  cursor.on('data', function(message) {
+
+    console.log("from me : " + message.type + ". New " + (message.new_val == null ? "NULL" : message.new_val.value) + ". Old " + (message.old_val == null ? "NULL" : message.old_val.value))
+    eventEmitter.emit('data', message)
   }),
-  cursor.on("error", function(message) {
+  cursor.on('error', function(message) {
      // TODO : Log error - do not emit up the stack
      // eventEmitter.emit("error", message)
   })
