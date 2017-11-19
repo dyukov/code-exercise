@@ -1,11 +1,11 @@
 const { expect, assert } = require('chai');
 const { client, feed } = require('../src/');
+const Rx = require('rx');
 
 describe('#feed', () => {
 
   let r;
   let s;
-  let s2;
   let tableTitle = "test_" + Date.now();
 
   before(async () => {
@@ -14,38 +14,17 @@ describe('#feed', () => {
     r.table(tableTitle).insert([
             {value: 'existing1'}, 
             {value: 'existing2'}, 
-            {value: 'existing3', somedata: "aaa"},
+            {value: 'existing3', existingData: "000"},
             {value: 'to be updated'},
             {value: 'to be deleted'}]).run(); 
   });
 
 
-  // NOTE: Simple example
-  it('should return query changefeed observable', (done) => {
-
-    // Create an observable changefeed from query
-    s = feed(
-    // Pass in any database query
-      r.table(tableTitle).filter({value: 'somevalue'})
-    )
-    // Subscribe to changes
-    .subscribe(change => {
-    // Example change object:
-    // {
-    //   type: 'update',
-    //   old_val: {<old_valious value>},
-    //   new_val: {<new value>}
-    // }
-      expect(change.type).to.equal('add');
-      expect(change.new_val.value).to.equal('somevalue');
-    // Will timeout if subscribe doesn't work properly
-      done();
-    });
-
-    // Perform example insert
-    setTimeout(function() {
-      r.table(tableTitle).insert({value: 'somevalue'}).run();
-    }, 500); 
+  // Smple example
+  it('should return Rx.Observable from changefeed query', (done) => {
+    let observable = feed(r.table(tableTitle))
+    expect(observable instanceof Rx.Observable).to.equal(true)
+    done();
   });
 
 
@@ -60,7 +39,7 @@ describe('#feed', () => {
   });
 
   // Add test case for 'insert'
-  it('should return correct observable for row ("ADD")', (done) => {
+  it('should return correct observable for added row ("ADD")', (done) => {
     s = feed(r.table(tableTitle).filter({value: 'just added'}))
         .subscribe(change => {
           expect(change.type).to.equal('add');
@@ -73,37 +52,25 @@ describe('#feed', () => {
     }, 1000);
   });
 
+  // Test case for 'update'
   xit('should return correct observable for updating row ("CHANGE")', (done) => {
-    s = feed(r.table(tableTitle).filter({newData: 'here is some new data'}))
-        .subscribe(change => {
-          console.log(change)
-          expect(change.type).to.equal('change');
-          expect(change.new_val.value).to.equal('to be updated1');
-        done();
-        });
-    setInterval(function() {
-      r.table(tableTitle).insert({value: 'just added 22', freeeText: "sadojfsldjflkasdkfljaslkdjfklasjdflkjasdlkfjlaskdjflksajdf"}).run();
-      r.table(tableTitle).filter({value: 'just added 22'}).update({newData: 'here is some new data'}).run();
-   }, 500);
-  });
-
-  // TODO: Add test case for 'update'
-  it('should return correct observable for updating row ("CHANGE")', (done) => {
-
    s = feed(r.table(tableTitle).filter({value: 'existing3'} ))
             .filter(change => change.type === 'change')
             .subscribe(change => {
               expect(change.type).to.equal('change');
+              expect(change.new_val.newData).to.equal('newly added data');
+              expect(change.new_val.existingData).to.equal('001');
+              expect(change.old_val.newData).to.equal(undefined);
+              expect(change.old_val.existingData).to.equal('000');
           done();
       });
 
     setInterval(function() {
-      // r.table(tableTitle).insert({value: 'just added 22', freeeText: "sadojfsldjflkasdkfljaslkdjfklasjdflkjasdlkfjlaskdjflksajdf"}).run();
-      r.table(tableTitle).filter({value: 'existing3'}).update({newData: 'XXX'}).run();
-   }, 500);
+      r.table(tableTitle).filter({value: 'existing3'}).limit(1).update({newData: 'newly added data', existingData: '001'}).run();
+   }, 1000);
   });
 
-  // TODO: Add test case for 'delete'
+  // Test case for 'delete'
   it('should return correct observable for row DELETE', (done) => {
     s = feed(r.table(tableTitle).filter({value: 'to be deleted'}))
         .filter(change => change.type === 'remove')
@@ -118,17 +85,21 @@ describe('#feed', () => {
     }, 500);
   });
 
-  // TODO: Add other test cases
-  //
-// function(doc){
-//     return doc('name').match("^A")
-// }
 
-
+  xit('should return correct observable for FILTER based on Value', (done) => {
+    s = feed(r.table(tableTitle).filter(row => row('value').match("^existing")))
+        .subscribe(change => {
+          console.log("cc-c-c-hange");
+          console.log(change);
+         // expect(change.new_val).to.equal(null);
+         // expect(change.old_val.value).to.equal('to be deleted');
+        done();
+      });
+  });
 
   after(async () => {
+    s.dispose();
     await r.tableDrop(tableTitle);
     await r.getPoolMaster().drain();
-    s.dispose();
   });
 });
