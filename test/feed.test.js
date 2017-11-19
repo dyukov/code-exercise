@@ -47,7 +47,7 @@ describe('#feed', () => {
         done();
         });
     
-    setTimeout(function() {
+    setTimeout(() => {
       r.table(tableTitle).insert({value: 'just added'}).run();
     }, 1000);
   });
@@ -67,7 +67,7 @@ describe('#feed', () => {
           done();
       });
 
-    setInterval(function() {
+    setInterval(() => {
       r.table(tableTitle).filter({value: 'existing3'}).limit(1).update({newData: 'newly added data', existingData: '001'}).run();
    }, 1000);
   });
@@ -82,7 +82,7 @@ describe('#feed', () => {
         done();
       });
       
-    setTimeout(function() {
+    setTimeout(() => {
       r.table(tableTitle).filter({value:'to be deleted'}).delete().run();
     }, 500);
   });
