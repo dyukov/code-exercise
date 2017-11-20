@@ -27,7 +27,7 @@ describe('#client', () => {
 
 // TEST WORKING WITH TABLES
   it('should create table', (done) => {
-    r.db('ClientTestTablesDb').tableCreate('ClientTestTable').then((change) => {
+    r.db('ClientTestTablesDb').tableCreate('ClientTestTable').run().then((change) => {
       expect(change.tables_created).to.equal(1);
       done()
     })
@@ -99,6 +99,30 @@ describe('#client', () => {
       expect(change.unchanged).to.equal(0);
       done()
     })
+  })
+
+
+// Location tests
+  it('should get correct distance between points', (done) => {
+    // NOTE: Rethink DB returns 18km
+    //       Google says: 9km
+    // Home Latitude:60.144728° Longitude:24.650552° // Google Maps:  60.145478, 24.652728
+    // Business Buttler Latitude:60.144728° Longitude:24.650552°  Google Maps: 60.187631, 24.806193
+    r.db('ClientTestTablesDb')
+    .table('ClientTestTable')
+    .insert([{id: 1, string: 'Home', location: r.point(60.145478, 24.652728)},
+             {id: 2, string: 'Business Buttler', location: r.point(60.187631, 24.806193)}]).run()
+    .then((change) => {
+      expect(change.inserted).to.equal(2);
+      r.db('ClientTestTablesDb').table('ClientTestTable')
+         .get(1)('location')
+         .distance(r.db('ClientTestTablesDb').table('ClientTestTable')
+                    .get(2)('location'), {unit: 'km'})
+         .run().then(distance => {
+          expect(Math.floor(distance)).to.equal(17)
+          done()
+        })
+     })
   })
 
 
